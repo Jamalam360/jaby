@@ -2,6 +2,8 @@ use crate::{constant_pool::ConstantPool, Error};
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Represents a JVM bytecode instruction.
+/// See https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5
 pub enum Instruction {
     aload {
         index: u8,
@@ -38,6 +40,7 @@ pub enum Instruction {
 }
 
 impl Instruction {
+    /// Emits the instruction as a byte array.
     pub fn emit(self, constant_pool: &mut ConstantPool) -> Result<Vec<u8>, Error> {
         let mut bytes = Vec::new();
 

@@ -2,6 +2,8 @@ use crate::{
     access_flag::AccessFlag, attribute::code::CodeBuilder, constant_pool::ConstantPool, Error,
 };
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+/// A builder for an individual method.
 pub struct MethodBuilder {
     access_flags: Vec<AccessFlag>,
     name: Option<String>,
@@ -11,6 +13,7 @@ pub struct MethodBuilder {
 }
 
 impl MethodBuilder {
+    /// Creates a new [MethodBuilder].
     pub fn new() -> Self {
         Self {
             access_flags: Vec::new(),
@@ -21,11 +24,14 @@ impl MethodBuilder {
         }
     }
 
+    /// Adds an access flag to the method.
+    /// 'Access' flags also include modifiers such as `final` or `abstract`.
     pub fn access_flag(mut self, flag: AccessFlag) -> Self {
         self.access_flags.push(flag);
         self
     }
 
+    /// Sets the name of the method.
     pub fn name<S>(mut self, name: S) -> Self
     where
         S: Into<String>,
@@ -34,6 +40,8 @@ impl MethodBuilder {
         self
     }
 
+    /// Adds a parameter to the method.
+    /// This is in the internal format, `Lcom/example/ExampleClass`.
     pub fn parameter<S>(mut self, descriptor: S) -> Self
     where
         S: Into<String>,
@@ -42,6 +50,8 @@ impl MethodBuilder {
         self
     }
 
+    /// Sets the return type of the method.
+    /// This is in the internal format, `Lcom/example/ExampleClass`.
     pub fn r#return<S>(mut self, descriptor: S) -> Self
     where
         S: Into<String>,
@@ -50,11 +60,13 @@ impl MethodBuilder {
         self
     }
 
+    /// Sets the code body of the method.
     pub fn code(mut self, code: CodeBuilder) -> Self {
         self.code = Some(code);
         self
     }
 
+    /// Emits the method to a vector of bytes.
     pub fn emit(self, constant_pool: &mut ConstantPool) -> Result<Vec<u8>, Error> {
         let mut bytes = Vec::new();
 

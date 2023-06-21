@@ -2,6 +2,10 @@ use crate::{constant_pool::ConstantPool, Error};
 
 pub mod code;
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+/// Represents a JVM attribute.
+/// This is used for things such as the `Code` attribute.
+/// See https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7
 pub enum Attribute {
     Code {
         max_stack: u16,
@@ -13,6 +17,7 @@ pub enum Attribute {
 }
 
 impl Attribute {
+    /// Emit the attribute as a byte vector.
     pub fn emit(self, constant_pool: &mut ConstantPool) -> Result<Vec<u8>, Error> {
         let mut bytes = Vec::new();
 

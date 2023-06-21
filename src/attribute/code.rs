@@ -2,6 +2,8 @@ use crate::{constant_pool::ConstantPool, instruction::Instruction, Error};
 
 use super::Attribute;
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+/// A builder for the `Code` attribute.
 pub struct CodeBuilder {
     max_stack: u16,
     max_locals: u16,
@@ -11,6 +13,7 @@ pub struct CodeBuilder {
 }
 
 impl CodeBuilder {
+    /// Creates a new [CodeBuilder].
     pub fn new() -> Self {
         Self {
             max_stack: 0,
@@ -21,16 +24,21 @@ impl CodeBuilder {
         }
     }
 
+    /// Sets the maximum stack size of the code attribute.
+    /// If this is not set, it will be calculated automatically.
     pub fn max_stack(mut self, max_stack: u16) -> Self {
         self.max_stack = max_stack;
         self
     }
 
+    /// Sets the maximum number of local variables in the code attribute.
+    /// This will **not** be calculated automatically.
     pub fn max_locals(mut self, max_locals: u16) -> Self {
         self.max_locals = max_locals;
         self
     }
 
+    /// Extends the instructions in the code attribute.
     pub fn instructions<I>(mut self, instructions: I) -> Self
     where
         I: IntoIterator<Item = Instruction>,
@@ -39,6 +47,7 @@ impl CodeBuilder {
         self
     }
 
+    /// Builds the code attribute into its attribute form.
     pub fn build(self, constant_pool: &mut ConstantPool) -> Result<Attribute, Error> {
         let max_stack = if self.max_stack == 0 {
             self.calculate_max_stack()

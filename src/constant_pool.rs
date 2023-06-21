@@ -2,7 +2,9 @@ use std::collections::HashMap;
 
 use crate::Error;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
+/// Represents an entry in the constant pool of a class file.
+/// See https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4
 pub enum ConstantPoolEntry {
     String(String),
     Integer(i32),
@@ -105,6 +107,9 @@ impl From<ConstantPoolEntry> for Vec<u8> {
     }
 }
 
+#[derive(Debug, Clone)]
+/// Represents the constant pool of a class file.
+/// See https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4
 pub struct ConstantPool {
     entries: Vec<ConstantPoolEntry>,
     // TODO: Cache more than just string values
@@ -112,6 +117,7 @@ pub struct ConstantPool {
 }
 
 impl ConstantPool {
+    /// Creates a new empty constant pool.
     pub fn new() -> Self {
         Self {
             entries: Vec::new(),
@@ -119,6 +125,8 @@ impl ConstantPool {
         }
     }
 
+    /// Inserts a new string into the constant pool.
+    /// This is cached, so if the string already exists in the constant pool, the index of the existing string is returned.
     pub fn insert_string<S>(&mut self, s: S) -> u16
     where
         S: Into<String>,
@@ -134,26 +142,31 @@ impl ConstantPool {
         index
     }
 
+    /// Inserts a new integer into the constant pool.
     pub fn insert_integer(&mut self, i: i32) -> u16 {
         self.entries.push(ConstantPoolEntry::Integer(i));
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a new float into the constant pool.
     pub fn insert_float(&mut self, f: f32) -> u16 {
         self.entries.push(ConstantPoolEntry::Float(f));
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a new long into the constant pool.
     pub fn insert_long(&mut self, l: i64) -> u16 {
         self.entries.push(ConstantPoolEntry::Long(l));
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a new double into the constant pool.
     pub fn insert_double(&mut self, d: f64) -> u16 {
         self.entries.push(ConstantPoolEntry::Double(d));
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a new class into the constant pool.
     pub fn insert_class<S>(&mut self, s: S) -> u16
     where
         S: Into<String>,
@@ -163,6 +176,7 @@ impl ConstantPool {
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a string reference into the constant pool.
     pub fn insert_string_reference<S>(&mut self, s: S) -> u16
     where
         S: Into<String>,
@@ -172,6 +186,7 @@ impl ConstantPool {
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a new field reference into the constant pool.
     pub fn insert_field<S>(&mut self, class: S, field: S, descriptor: S) -> u16
     where
         S: Into<String>,
@@ -183,6 +198,7 @@ impl ConstantPool {
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a new method reference into the constant pool.
     pub fn insert_method<S>(&mut self, class: S, method: S, descriptor: S) -> u16
     where
         S: Into<String>,
@@ -194,6 +210,7 @@ impl ConstantPool {
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a new interface method reference into the constant pool.
     pub fn insert_interface_method<S>(&mut self, interface: S, method: S, descriptor: S) -> u16
     where
         S: Into<String>,
@@ -207,6 +224,7 @@ impl ConstantPool {
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a new name and type into the constant pool.
     pub fn insert_name_and_type<S>(&mut self, name: S, descriptor: S) -> u16
     where
         S: Into<String>,
@@ -218,6 +236,7 @@ impl ConstantPool {
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a new method type into the constant pool.
     pub fn insert_method_type<S>(&mut self, descriptor: S) -> u16
     where
         S: Into<String>,
@@ -228,12 +247,14 @@ impl ConstantPool {
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a new method handle into the constant pool.
     pub fn insert_dynamic(&mut self, bootstrap_method: u16, name_and_type: u16) -> u16 {
         self.entries
             .push(ConstantPoolEntry::Dynamic(bootstrap_method, name_and_type));
         self.entries.len().try_into().unwrap()
     }
 
+    /// Inserts a new method handle into the constant pool.
     pub fn insert_invoke_dynamic(&mut self, bootstrap_method: u16, name_and_type: u16) -> u16 {
         self.entries.push(ConstantPoolEntry::InvokeDynamic(
             bootstrap_method,
@@ -242,6 +263,7 @@ impl ConstantPool {
         self.entries.len().try_into().unwrap()
     }
 
+    /// Insert a new module reference into the constant pool.
     pub fn insert_module<S>(&mut self, name: S) -> u16
     where
         S: Into<String>,
@@ -251,6 +273,7 @@ impl ConstantPool {
         self.entries.len().try_into().unwrap()
     }
 
+    /// Insert a new package reference into the constant pool.
     pub fn insert_package<S>(&mut self, name: S) -> u16
     where
         S: Into<String>,
@@ -260,6 +283,7 @@ impl ConstantPool {
         self.entries.len().try_into().unwrap()
     }
 
+    /// Emit the constant pool as a byte vector.
     pub fn emit(self) -> Result<Vec<u8>, Error> {
         let mut bytes = Vec::new();
         bytes.extend_from_slice(&(self.entries.len() as u16 + 1).to_be_bytes());

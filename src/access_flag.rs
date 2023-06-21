@@ -1,3 +1,6 @@
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+/// Represents an access flag for a class, field, or method.
+/// See https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.5
 pub enum AccessFlag {
     Public,
     Private,
