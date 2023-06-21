@@ -1,0 +1,25 @@
+[package]
+name = "rava"
+authors = ["Jamalam <james[at]jamalam.tech"]
+description = "Rava is a complete Rust crate for creating Java class files, or bytecode"
+homepage = "https://github.com/Jamalam360/rava"
+repository = "https://github.com/Jamalam360/rava"
+license = "MIT"
+categories = ["compilers"]
+keywords = ["java", "jvm", "bytecode"]
+
+version = "0.0.1"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+thiserror = "1.0"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+tempfile = "3.2"
+
+[[bench]]
+name = "add_two_numbers_with_a_function"
+harness = false
