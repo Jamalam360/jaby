@@ -1,5 +1,5 @@
 use criterion::{criterion_group, criterion_main, Criterion};
-use rava::{
+use jaby::{
     access_flag::AccessFlag,
     attribute::code::CodeBuilder,
     instruction::Instruction::{

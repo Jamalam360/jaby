@@ -1,8 +1,6 @@
-# Rava
+# Jaby
 
-_Rust + Java = Rava_
-
-Rava is a complete Rust crate for creating Java class files, or _bytecode_.
+Jaby (**Ja**va **By**tecode) is a complete Rust crate for creating Java class files.
 
 ## Features
 
@@ -70,4 +68,4 @@ You can find more examples in the `src/functional_tests` directory.
 
 ## Recommendations
 
-- Import each `Instruction` individually (i.e. `use rava::instruction::{iload, iadd, ireturn}`) to make your code more concise.
+- Import each `Instruction` individually (i.e. `use jaby::instruction::{iload, iadd, ireturn}`) to make your code more concise.

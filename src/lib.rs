@@ -14,7 +14,7 @@ pub mod method;
 mod functional_tests;
 
 #[derive(Error, Debug)]
-/// Most errors in Rava are exposed through this enum.
+/// Most errors in Jaby are exposed through this enum.
 pub enum Error {
     #[error("Invalid iconst value (must be -1 to 5 inc.): {0}")]
     InvalidIconst(i32),
@@ -22,7 +22,7 @@ pub enum Error {
 
 /// A builder for an individual class file.
 /// The output bytes of [ClassFileBuilder] corresponds to the contents of one `.class` file.
-pub struct ClassFileBuilder { 
+pub struct ClassFileBuilder {
     access_flags: Vec<AccessFlag>,
     constant_pool: ConstantPool,
     class_name: Option<String>,
