@@ -127,9 +127,7 @@ impl ConstantPool {
 
     /// Inserts a new string into the constant pool.
     /// This is cached, so if the string already exists in the constant pool, the index of the existing string is returned.
-    pub fn insert_string<S>(&mut self, s: S) -> u16
-    where
-        S: Into<String>,
+    pub fn insert_string(&mut self, s: impl Into<String>) -> u16
     {
         let s = s.into();
         if let Some(index) = self.cache.get(&s) {
@@ -167,9 +165,7 @@ impl ConstantPool {
     }
 
     /// Inserts a new class into the constant pool.
-    pub fn insert_class<S>(&mut self, s: S) -> u16
-    where
-        S: Into<String>,
+    pub fn insert_class(&mut self, s: impl Into<String>) -> u16
     {
         let index = self.insert_string(s);
         self.entries.push(ConstantPoolEntry::Class(index));
@@ -177,9 +173,7 @@ impl ConstantPool {
     }
 
     /// Inserts a string reference into the constant pool.
-    pub fn insert_string_reference<S>(&mut self, s: S) -> u16
-    where
-        S: Into<String>,
+    pub fn insert_string_reference(&mut self, s:  impl Into<String>) -> u16
     {
         let index = self.insert_string(s);
         self.entries.push(ConstantPoolEntry::StringReference(index));
@@ -187,9 +181,7 @@ impl ConstantPool {
     }
 
     /// Inserts a new field reference into the constant pool.
-    pub fn insert_field<S>(&mut self, class: S, field: S, descriptor: S) -> u16
-    where
-        S: Into<String>,
+    pub fn insert_field(&mut self, class: impl Into<String>, field: impl Into<String>, descriptor: impl Into<String>) -> u16
     {
         let class_index = self.insert_class(class);
         let name_and_type_index = self.insert_name_and_type(field, descriptor);
@@ -199,9 +191,7 @@ impl ConstantPool {
     }
 
     /// Inserts a new method reference into the constant pool.
-    pub fn insert_method<S>(&mut self, class: S, method: S, descriptor: S) -> u16
-    where
-        S: Into<String>,
+    pub fn insert_method(&mut self, class: impl Into<String>, method: impl Into<String>, descriptor: impl Into<String>) -> u16
     {
         let class_index = self.insert_class(class);
         let name_and_type_index = self.insert_name_and_type(method, descriptor);
@@ -211,9 +201,7 @@ impl ConstantPool {
     }
 
     /// Inserts a new interface method reference into the constant pool.
-    pub fn insert_interface_method<S>(&mut self, interface: S, method: S, descriptor: S) -> u16
-    where
-        S: Into<String>,
+    pub fn insert_interface_method(&mut self, interface: impl Into<String>, method: impl Into<String>, descriptor: impl Into<String>) -> u16
     {
         let interface_index = self.insert_class(interface);
         let name_and_type_index = self.insert_name_and_type(method, descriptor);
@@ -225,9 +213,7 @@ impl ConstantPool {
     }
 
     /// Inserts a new name and type into the constant pool.
-    pub fn insert_name_and_type<S>(&mut self, name: S, descriptor: S) -> u16
-    where
-        S: Into<String>,
+    pub fn insert_name_and_type(&mut self, name: impl Into<String>, descriptor: impl Into<String>) -> u16
     {
         let name_index = self.insert_string(name);
         let descriptor_index = self.insert_string(descriptor);
@@ -237,9 +223,7 @@ impl ConstantPool {
     }
 
     /// Inserts a new method type into the constant pool.
-    pub fn insert_method_type<S>(&mut self, descriptor: S) -> u16
-    where
-        S: Into<String>,
+    pub fn insert_method_type(&mut self, descriptor: impl Into<String>) -> u16
     {
         let descriptor_index = self.insert_string(descriptor);
         self.entries
@@ -264,9 +248,7 @@ impl ConstantPool {
     }
 
     /// Insert a new module reference into the constant pool.
-    pub fn insert_module<S>(&mut self, name: S) -> u16
-    where
-        S: Into<String>,
+    pub fn insert_module(&mut self, name: impl Into<String>) -> u16
     {
         let name_index = self.insert_string(name);
         self.entries.push(ConstantPoolEntry::Module(name_index));
@@ -274,9 +256,7 @@ impl ConstantPool {
     }
 
     /// Insert a new package reference into the constant pool.
-    pub fn insert_package<S>(&mut self, name: S) -> u16
-    where
-        S: Into<String>,
+    pub fn insert_package(&mut self, name: impl Into<String>) -> u16
     {
         let name_index = self.insert_string(name);
         self.entries.push(ConstantPoolEntry::Package(name_index));

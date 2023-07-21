@@ -50,9 +50,7 @@ impl ClassFileBuilder {
     }
 
     /// Sets the name of the class.
-    pub fn class_name<S>(mut self, class_name: S) -> Self
-    where
-        S: Into<String>,
+    pub fn class_name(mut self, class_name: impl Into<String>) -> Self
     {
         self.class_name = Some(class_name.into());
         self
@@ -60,9 +58,7 @@ impl ClassFileBuilder {
 
     /// Sets the name of the super class.
     /// This is in the internal format, `Lcom/example/ExampleClass`.
-    pub fn super_class<S>(mut self, super_class: S) -> Self
-    where
-        S: Into<String>,
+    pub fn super_class(mut self, super_class: impl Into<String>) -> Self
     {
         self.super_class = Some(super_class.into());
         self

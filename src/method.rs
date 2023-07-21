@@ -32,9 +32,7 @@ impl MethodBuilder {
     }
 
     /// Sets the name of the method.
-    pub fn name<S>(mut self, name: S) -> Self
-    where
-        S: Into<String>,
+    pub fn name(mut self, name: impl Into<String>) -> Self
     {
         self.name = Some(name.into());
         self
@@ -42,9 +40,7 @@ impl MethodBuilder {
 
     /// Adds a parameter to the method.
     /// This is in the internal format, `Lcom/example/ExampleClass`.
-    pub fn parameter<S>(mut self, descriptor: S) -> Self
-    where
-        S: Into<String>,
+    pub fn parameter(mut self, descriptor: impl Into<String>) -> Self
     {
         self.parameter_descriptors.push(descriptor.into());
         self
@@ -52,9 +48,7 @@ impl MethodBuilder {
 
     /// Sets the return type of the method.
     /// This is in the internal format, `Lcom/example/ExampleClass`.
-    pub fn r#return<S>(mut self, descriptor: S) -> Self
-    where
-        S: Into<String>,
+    pub fn r#return(mut self, descriptor: impl Into<String>) -> Self
     {
         self.return_descriptor = Some(descriptor.into());
         self

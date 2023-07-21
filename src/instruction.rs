@@ -113,3 +113,63 @@ impl Instruction {
         Ok(bytes)
     }
 }
+
+pub fn aload(index: u8) -> Instruction {
+    Instruction::aload { index }
+}
+
+pub fn iconst(value: i32) -> Instruction {
+    if value < -1 || value > 5 {
+        panic!("Invalid iconst value: {}", value);
+    }
+
+    Instruction::iconst { value }
+}
+
+pub fn iload(index: u8) -> Instruction {
+    Instruction::iload { index }
+}
+
+pub fn iadd() -> Instruction {
+    Instruction::iadd
+}
+
+pub fn invokespecial(class: impl Into<String>, name: impl Into<String>, descriptor: impl Into<String>) -> Instruction {
+    Instruction::invokespecial {
+        class: class.into(),
+        name: name.into(),
+        descriptor: descriptor.into(),
+    }
+}
+
+pub fn invokevirtual(class: impl Into<String>, name: impl Into<String>, descriptor: impl Into<String>) -> Instruction {
+    Instruction::invokevirtual {
+        class: class.into(),
+        name: name.into(),
+        descriptor: descriptor.into(),
+    }
+}
+
+pub fn invokestatic(class: impl Into<String>, name: impl Into<String>, descriptor: impl Into<String>) -> Instruction {
+    Instruction::invokestatic {
+        class: class.into(),
+        name: name.into(),
+        descriptor: descriptor.into(),
+    }
+}
+
+pub fn getstatic(class: impl Into<String>, name: impl Into<String>, descriptor: impl Into<String>) -> Instruction {
+    Instruction::getstatic {
+        class: class.into(),
+        name: name.into(),
+        descriptor: descriptor.into(),
+    }
+}
+
+pub fn ireturn() -> Instruction {
+    Instruction::ireturn
+}
+
+pub fn r#return() -> Instruction {
+    Instruction::r#return
+}

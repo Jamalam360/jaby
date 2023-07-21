@@ -1,6 +1,6 @@
 use crate::{
     attribute::code::CodeBuilder,
-    instruction::Instruction::{
+    instruction::{
         aload, getstatic, iadd, iconst, iload, invokespecial, invokestatic, invokevirtual, ireturn,
         r#return,
     },
@@ -9,9 +9,7 @@ use crate::{
 use super::*;
 use std::fs;
 
-pub fn run_bytecode<S>(bytes: Vec<u8>, expected_output: S)
-where
-    S: Into<String>,
+pub fn run_bytecode(bytes: Vec<u8>, expected_output: impl Into<String>)
 {
     let expected_output = expected_output.into();
     let dir = tempfile::TempDir::new().unwrap();
@@ -58,13 +56,9 @@ fn add_two_numbers() {
                 .access_flag(AccessFlag::Public)
                 .name("<init>")
                 .code(CodeBuilder::new().max_locals(1).instructions([
-                    aload { index: 0 },
-                    invokespecial {
-                        class: "java/lang/Object".to_string(),
-                        name: "<init>".to_string(),
-                        descriptor: "()V".to_string(),
-                    },
-                    r#return,
+                    aload(0),
+                    invokespecial("java/lang/Object", "<init>", "()V"),
+                    r#return(),
                 ])),
         )
         .method(
@@ -75,20 +69,12 @@ fn add_two_numbers() {
                 .parameter("[Ljava/lang/String;".to_string())
                 .r#return("V".to_string())
                 .code(CodeBuilder::new().max_locals(1).instructions([
-                    getstatic {
-                        class: "java/lang/System".to_string(),
-                        name: "out".to_string(),
-                        descriptor: "Ljava/io/PrintStream;".to_string(),
-                    },
-                    iconst { value: 2 },
-                    iconst { value: 2 },
-                    iadd,
-                    invokevirtual {
-                        class: "java/io/PrintStream".to_string(),
-                        name: "println".to_string(),
-                        descriptor: "(I)V".to_string(),
-                    },
-                    r#return,
+                    getstatic("java/lang/System", "out", "Ljava/io/PrintStream"),
+                    iconst(2),
+                    iconst(2),
+                    iadd(),
+                    invokevirtual("java/io/PrintStream", "println", "(I)V"),
+                    r#return(),
                 ])),
         )
         .emit()
@@ -107,13 +93,9 @@ fn add_two_numbers_via_a_method() {
                 .access_flag(AccessFlag::Public)
                 .name("<init>".to_string())
                 .code(CodeBuilder::new().max_locals(1).instructions([
-                    aload { index: 0 },
-                    invokespecial {
-                        class: "java/lang/Object".to_string(),
-                        name: "<init>".to_string(),
-                        descriptor: "()V".to_string(),
-                    },
-                    r#return,
+                    aload(0),
+                    invokespecial("java/lang/Object", "<init>", "()V"),
+                    r#return(),
                 ])),
         )
         .method(
@@ -125,10 +107,10 @@ fn add_two_numbers_via_a_method() {
                 .parameter("I".to_string())
                 .r#return("I".to_string())
                 .code(CodeBuilder::new().max_locals(2).instructions([
-                    iload { index: 0 },
-                    iload { index: 1 },
-                    iadd,
-                    ireturn,
+                    iload(0),
+                    iload(1),
+                    iadd(),
+                    ireturn(),
                 ])),
         )
         .method(
@@ -139,32 +121,16 @@ fn add_two_numbers_via_a_method() {
                 .parameter("[Ljava/lang/String;".to_string())
                 .r#return("V".to_string())
                 .code(CodeBuilder::new().max_locals(1).instructions([
-                    getstatic {
-                        class: "java/lang/System".to_string(),
-                        name: "out".to_string(),
-                        descriptor: "Ljava/io/PrintStream;".to_string(),
-                    },
-                    iconst { value: 2 },
-                    iconst { value: 2 },
-                    invokestatic {
-                        class: "Test".to_string(),
-                        name: "add".to_string(),
-                        descriptor: "(II)I".to_string(),
-                    },
-                    iconst { value: 2 },
-                    iconst { value: 2 },
-                    invokestatic {
-                        class: "Test".to_string(),
-                        name: "add".to_string(),
-                        descriptor: "(II)I".to_string(),
-                    },
-                    iadd,
-                    invokevirtual {
-                        class: "java/io/PrintStream".to_string(),
-                        name: "println".to_string(),
-                        descriptor: "(I)V".to_string(),
-                    },
-                    r#return,
+                    getstatic("java/lang/System", "out", "Ljava/io/PrintStream"),
+                    iconst(2),
+                    iconst(2),
+                    invokestatic("Test", "add", "(II)I"),
+                    iconst(2),
+                    iconst(2),
+                    invokestatic("Test", "add", "(II)I"),
+                    iadd(),
+                    invokevirtual("java/io/PrintStream", "println", "(I)V"),
+                    r#return(),
                 ])),
         )
         .emit()
